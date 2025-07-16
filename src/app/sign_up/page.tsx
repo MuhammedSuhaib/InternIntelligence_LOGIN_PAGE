@@ -1,18 +1,15 @@
 import Image from "next/image";
-import Link from "next/link";
 
-export default function Login() {
+export default function SignUp() {
   return (
     <div className="min-h-screen flex bg-gray-50">
-      {/*Form */}
-      <main className="flex-2 flex items-center justify-center">
+      {/* Sign Up Form */}
+      <div className="flex-2 flex items-center justify-center">
         <div className="w-full max-w-sm space-y-6">
           <div className="flex justify-center mb-4">
             <Image src="/images.png" alt="Logo" width={150} height={40} />
           </div>
-          <h2 className="text-center text-xl font-semibold text-gray-900">
-            Login
-          </h2>
+          <h2 className="text-center text-xl font-semibold text-gray-900">Sign up</h2>
 
           <button className="w-full flex items-center justify-center gap-2 border rounded-md py-2 px-4 text-sm font-medium text-gray-700 hover:bg-gray-100">
             <Image src="/google-icon.png" alt="Google" width={20} height={20} />
@@ -26,6 +23,19 @@ export default function Login() {
           </div>
 
           <form className="space-y-4">
+            <div className="flex gap-2">
+              <input
+                type="text"
+                placeholder="First Name"
+                className="w-1/2 border rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+              <input
+                type="text"
+                placeholder="Last Name"
+                className="w-1/2 border rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+            </div>
+
             <input
               type="email"
               placeholder="Email"
@@ -39,40 +49,18 @@ export default function Login() {
                 className="w-full border rounded-md px-3 py-2 text-sm pr-10 focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
             </div>
-            <div className="flex items-center justify-between">
-              <label
-                htmlFor="Remember"
-                className="flex items-center gap-2 text-sm text-gray-700"
-              >
-                <input
-                  type="checkbox"
-                  id="Remember"
-                  name="Remember"
-                  className="accent-blue-600"
-                />
-                Remember me
-              </label>
-              <a href="#" className="text-blue-600 hover:underline text-sm">
-                Forgot Password?
-              </a>
-            </div>
             <button
               type="submit"
               className="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 rounded-md text-sm font-semibold"
             >
-              Login
+              Join
             </button>
           </form>
-          <span className="flex justify-center-safe items-center-safe">
-            Don't have an account?
-            <Link href="/sign_up" className="text-blue-600 hover:underline text-sm">
-              Sign up
-            </Link>
-          </span>
         </div>
-      </main>
+      </div>
       {/* Background Image Section */}
-      <aside className="flex-1 bg-[url('/bird.webp')] bg-cover bg-center flex items-center justify-center"></aside>
+      <div className="flex-1 bg-[url('/bird.webp')] bg-cover bg-center flex items-center justify-center">
+      </div>
     </div>
   );
 }
