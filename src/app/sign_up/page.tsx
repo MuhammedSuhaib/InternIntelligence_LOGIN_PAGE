@@ -1,6 +1,55 @@
+"use client";
 import Image from "next/image";
+import Link from "next/link";
+import { useState } from "react";
+import { auth, provider } from "@/lib/firebase";
+import {
+  createUserWithEmailAndPassword,
+  signInWithPopup,
+  updateProfile,
+} from "firebase/auth";
+import { useRouter } from "next/navigation";
+import Cookies from "universal-cookie";
 
-export default function SignUp() {
+export default function SignUp({
+}: {
+  setIsAuth: (val: boolean) => void;
+}) {
+  const [registerEmail, setRegisterEmail] = useState("");
+  const [registerPassword, setRegisterPassword] = useState("");
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+
+  const router = useRouter();
+  const cookies = new Cookies();
+
+  // Signup with Manually
+  const register = async () => {
+    try {
+      const userCredential = await createUserWithEmailAndPassword(
+        auth,
+        registerEmail,
+        registerPassword
+      );
+
+      await updateProfile(userCredential.user, {
+        displayName: `${firstName} ${lastName}`,
+      });
+
+      console.log(userCredential);
+      router.push("/account");
+    } catch (error: any) {
+      console.log(error.message);
+    }
+  };
+
+  // Signup with Google
+  const signInWithGoogle = async () => {
+    const result = await signInWithPopup(auth, provider);
+    cookies.set("auth-token", result.user.refreshToken);
+    router.push("/account");
+  };
+
   return (
     <div className="min-h-screen flex bg-gray-50">
       {/* Sign Up Form */}
@@ -9,9 +58,14 @@ export default function SignUp() {
           <div className="flex justify-center mb-4">
             <Image src="/images.png" alt="Logo" width={150} height={40} />
           </div>
-          <h2 className="text-center text-xl font-semibold text-gray-900">Sign up</h2>
+          <h2 className="text-center text-xl font-semibold text-gray-900">
+            Sign up
+          </h2>
 
-          <button className="w-full flex items-center justify-center gap-2 border rounded-md py-2 px-4 text-sm font-medium text-gray-700 hover:bg-gray-100">
+          <button
+            className="w-full flex items-center justify-center gap-2 border rounded-md py-2 px-4 text-sm font-medium text-gray-700 hover:bg-gray-100"
+            onClick={signInWithGoogle}
+          >
             <Image src="/google-icon.png" alt="Google" width={20} height={20} />
             Continue with Google
           </button>
@@ -27,11 +81,13 @@ export default function SignUp() {
               <input
                 type="text"
                 placeholder="First Name"
+                onChange={(e) => setFirstName(e.target.value)}
                 className="w-1/2 border rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
               <input
                 type="text"
                 placeholder="Last Name"
+                onChange={(e) => setLastName(e.target.value)}
                 className="w-1/2 border rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
             </div>
@@ -39,6 +95,9 @@ export default function SignUp() {
             <input
               type="email"
               placeholder="Email"
+              onChange={(event) => {
+                setRegisterEmail(event.target.value);
+              }}
               className="w-full border rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
 
@@ -46,21 +105,37 @@ export default function SignUp() {
               <input
                 type="password"
                 placeholder="Password"
+                onChange={(event) => {
+                  setRegisterPassword(event.target.value);
+                }}
                 className="w-full border rounded-md px-3 py-2 text-sm pr-10 focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
             </div>
             <button
               type="submit"
+              onClick={(e) => {
+                e.preventDefault();
+                if (!registerEmail || !registerPassword) {
+                  alert("Please fill in email and password.");
+                  return;
+                }
+                register();
+              }}
               className="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 rounded-md text-sm font-semibold"
             >
               Join
             </button>
           </form>
+          <span className="flex justify-center-safe items-center-safe">
+            Already have an account?
+            <Link href="/" className="text-blue-600 hover:underline text-sm">
+              Login
+            </Link>
+          </span>
         </div>
       </div>
       {/* Background Image Section */}
-      <div className="flex-1 bg-[url('/bird.webp')] bg-cover bg-center flex items-center justify-center">
-      </div>
+      <div className="flex-1 bg-[url('/bird.webp')] bg-cover bg-center flex items-center justify-center"></div>
     </div>
   );
 }

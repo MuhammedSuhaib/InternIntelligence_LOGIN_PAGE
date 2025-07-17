@@ -1,7 +1,69 @@
+"use client";
 import Image from "next/image";
 import Link from "next/link";
+import { useState } from "react";
+import {
+  signInWithEmailAndPassword,
+  signInWithPopup,
+  setPersistence,
+  browserLocalPersistence,
+  browserSessionPersistence,
+  sendPasswordResetEmail,
+} from "firebase/auth";
+import { auth, provider } from "@/lib/firebase";
+import { useRouter } from "next/navigation";
+import Cookies from "universal-cookie";
 
 export default function Login() {
+  const [loginEmail, setLoginEmail] = useState("");
+  const [loginPassword, setLoginPassword] = useState("");
+  const [rememberMe, setRememberMe] = useState(false);
+  const router = useRouter();
+  const cookies = new Cookies();
+
+  // Login with user name and pass
+  const login = async () => {
+    try {
+      const user = await signInWithEmailAndPassword(
+        auth,
+        loginEmail,
+        loginPassword
+      );
+      cookies.set("auth-token", user.user.refreshToken);
+      const persistence = rememberMe
+        ? browserLocalPersistence
+        : browserSessionPersistence;
+      await setPersistence(auth, persistence);
+      router.push("/account");
+    } catch (error: any) {
+      alert(error.message);
+    }
+  };
+  // Login with Google
+  const signInWithGoogle = async () => {
+    const result = await signInWithPopup(auth, provider);
+    cookies.set("auth-token", result.user.refreshToken);
+    router.push("/account");
+  };
+
+  // Pass Reset
+  const resetPassword = async () => {
+    if (!loginEmail) {
+      alert("Please enter your email first.");
+      return;
+    }
+    try {
+      await sendPasswordResetEmail(auth, loginEmail);
+      alert("Password reset email sent.");
+    } catch (error: any) {
+      if (error.code === "auth/user-not-found") {
+        alert("Email not registered. Please sign up first.");
+      } else {
+        alert(error.message);
+      }
+    }
+  };
+
   return (
     <div className="min-h-screen flex bg-gray-50">
       {/*Form */}
@@ -14,7 +76,10 @@ export default function Login() {
             Login
           </h2>
 
-          <button className="w-full flex items-center justify-center gap-2 border rounded-md py-2 px-4 text-sm font-medium text-gray-700 hover:bg-gray-100">
+          <button
+            onClick={signInWithGoogle}
+            className="w-full flex items-center justify-center gap-2 border rounded-md py-2 px-4 text-sm font-medium text-gray-700 hover:bg-gray-100"
+          >
             <Image src="/google-icon.png" alt="Google" width={20} height={20} />
             Continue with Google
           </button>
@@ -29,6 +94,9 @@ export default function Login() {
             <input
               type="email"
               placeholder="Email"
+              onChange={(event) => {
+                setLoginEmail(event.target.value);
+              }}
               className="w-full border rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
 
@@ -36,6 +104,9 @@ export default function Login() {
               <input
                 type="password"
                 placeholder="Password"
+                onChange={(event) => {
+                  setLoginPassword(event.target.value);
+                }}
                 className="w-full border rounded-md px-3 py-2 text-sm pr-10 focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
             </div>
@@ -48,16 +119,33 @@ export default function Login() {
                   type="checkbox"
                   id="Remember"
                   name="Remember"
+                  checked={rememberMe}
+                  onChange={() => setRememberMe(!rememberMe)}
                   className="accent-blue-600"
                 />
                 Remember me
               </label>
-              <a href="#" className="text-blue-600 hover:underline text-sm">
+              <a
+                href="#"
+                onClick={(e) => {
+                  e.preventDefault();
+                  resetPassword();
+                }}
+                className="text-blue-600 hover:underline text-sm"
+              >
                 Forgot Password?
               </a>
             </div>
             <button
               type="submit"
+              onClick={(e) => {
+                e.preventDefault();
+                if (!loginEmail || !loginPassword) {
+                  alert("Please fill in both email and password.");
+                  return;
+                }
+                login();
+              }}
               className="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 rounded-md text-sm font-semibold"
             >
               Login
@@ -65,7 +153,10 @@ export default function Login() {
           </form>
           <span className="flex justify-center-safe items-center-safe">
             Don't have an account?
-            <Link href="/sign_up" className="text-blue-600 hover:underline text-sm">
+            <Link
+              href="/sign_up"
+              className="text-blue-600 hover:underline text-sm"
+            >
               Sign up
             </Link>
           </span>
