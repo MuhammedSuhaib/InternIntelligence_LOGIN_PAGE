@@ -23,6 +23,10 @@ export default function Login() {
 
   // Login with user name and pass
   const login = async () => {
+    const persistence = rememberMe
+      ? browserLocalPersistence
+      : browserSessionPersistence;
+    await setPersistence(auth, persistence);
     try {
       const user = await signInWithEmailAndPassword(
         auth,
@@ -30,10 +34,6 @@ export default function Login() {
         loginPassword
       );
       cookies.set("auth-token", user.user.refreshToken);
-      const persistence = rememberMe
-        ? browserLocalPersistence
-        : browserSessionPersistence;
-      await setPersistence(auth, persistence);
       router.push("/account");
     } catch (error: any) {
       alert(error.message);
@@ -41,9 +41,13 @@ export default function Login() {
   };
   // Login with Google
   const signInWithGoogle = async () => {
-    const result = await signInWithPopup(auth, provider);
-    cookies.set("auth-token", result.user.refreshToken);
-    router.push("/account");
+    try {
+      const result = await signInWithPopup(auth, provider);
+      cookies.set("auth-token", result.user.refreshToken);
+      router.push("/account");
+    } catch (error: any) {
+      alert(error.message);
+    }
   };
 
   // Pass Reset
@@ -89,8 +93,18 @@ export default function Login() {
             <span className="mx-2 text-sm text-gray-400">OR</span>
             <hr className="flex-grow border-gray-300" />
           </div>
-
-          <form className="space-y-4">
+          {/*---------------------------------------------- Form---------------------------------------------- */}
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              if (!loginEmail || !loginPassword) {
+                alert("Please fill in both email and password.");
+                return;
+              }
+              login();
+            }}
+            className="space-y-4"
+          >
             <input
               type="email"
               placeholder="Email"
@@ -138,19 +152,12 @@ export default function Login() {
             </div>
             <button
               type="submit"
-              onClick={(e) => {
-                e.preventDefault();
-                if (!loginEmail || !loginPassword) {
-                  alert("Please fill in both email and password.");
-                  return;
-                }
-                login();
-              }}
               className="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 rounded-md text-sm font-semibold"
             >
               Login
             </button>
           </form>
+          {/*---------------------------------------------- Form---------------------------------------------- */}
           <span className="flex justify-center-safe items-center-safe">
             Don't have an account?
             <Link

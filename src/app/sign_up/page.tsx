@@ -11,10 +11,7 @@ import {
 import { useRouter } from "next/navigation";
 import Cookies from "universal-cookie";
 
-export default function SignUp({
-}: {
-  setIsAuth: (val: boolean) => void;
-}) {
+export default function SignUp({}: { setIsAuth: (val: boolean) => void }) {
   const [registerEmail, setRegisterEmail] = useState("");
   const [registerPassword, setRegisterPassword] = useState("");
   const [firstName, setFirstName] = useState("");
@@ -75,8 +72,19 @@ export default function SignUp({
             <span className="mx-2 text-sm text-gray-400">OR</span>
             <hr className="flex-grow border-gray-300" />
           </div>
-
-          <form className="space-y-4">
+          {/*---------------------------------------------- Form---------------------------------------------- */}
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              if (!registerEmail || !registerPassword) {
+                alert("Please fill in both email and password.");
+                return;
+              }
+              register();
+            }}
+            className="space-y-4"
+          >
+            {" "}
             <div className="flex gap-2">
               <input
                 type="text"
@@ -91,7 +99,6 @@ export default function SignUp({
                 className="w-1/2 border rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
             </div>
-
             <input
               type="email"
               placeholder="Email"
@@ -100,7 +107,6 @@ export default function SignUp({
               }}
               className="w-full border rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
-
             <div className="relative">
               <input
                 type="password"
@@ -113,19 +119,12 @@ export default function SignUp({
             </div>
             <button
               type="submit"
-              onClick={(e) => {
-                e.preventDefault();
-                if (!registerEmail || !registerPassword) {
-                  alert("Please fill in email and password.");
-                  return;
-                }
-                register();
-              }}
               className="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 rounded-md text-sm font-semibold"
             >
               Join
             </button>
           </form>
+          {/*---------------------------------------------- Form---------------------------------------------- */}
           <span className="flex justify-center-safe items-center-safe">
             Already have an account?
             <Link href="/" className="text-blue-600 hover:underline text-sm">
