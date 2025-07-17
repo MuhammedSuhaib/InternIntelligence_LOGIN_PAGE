@@ -11,7 +11,7 @@ import {
 import { useRouter } from "next/navigation";
 import Cookies from "universal-cookie";
 
-export default function SignUp({}: { setIsAuth: (val: boolean) => void }) {
+export default function SignUp() {
   const [registerEmail, setRegisterEmail] = useState("");
   const [registerPassword, setRegisterPassword] = useState("");
   const [firstName, setFirstName] = useState("");
@@ -28,15 +28,19 @@ export default function SignUp({}: { setIsAuth: (val: boolean) => void }) {
         registerEmail,
         registerPassword
       );
-
       await updateProfile(userCredential.user, {
         displayName: `${firstName} ${lastName}`,
       });
-
-      console.log(userCredential);
+      cookies.set("auth-token", userCredential.user.refreshToken); // ✅ Add this
       router.push("/account");
     } catch (error: any) {
-      console.log(error.message);
+      if (error.code === "auth/email-already-in-use") {
+        alert(
+          "Email is already in use. Try logging in or use a different email."
+        );
+      }
+      else{alert(error.message)}
+     
     }
   };
 

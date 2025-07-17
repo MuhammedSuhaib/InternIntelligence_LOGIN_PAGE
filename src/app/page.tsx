@@ -56,9 +56,10 @@ export default function Login() {
       alert("Please enter your email first.");
       return;
     }
+
     try {
       await sendPasswordResetEmail(auth, loginEmail);
-      alert("Password reset email sent.");
+      alert("Password reset email sent to " + loginEmail);
     } catch (error: any) {
       if (error.code === "auth/user-not-found") {
         alert("Email not registered. Please sign up first.");
@@ -139,8 +140,8 @@ export default function Login() {
                 />
                 Remember me
               </label>
-              <a
-                href="#"
+              <button
+                disabled={!loginEmail}
                 onClick={(e) => {
                   e.preventDefault();
                   resetPassword();
@@ -148,7 +149,7 @@ export default function Login() {
                 className="text-blue-600 hover:underline text-sm"
               >
                 Forgot Password?
-              </a>
+              </button>
             </div>
             <button
               type="submit"

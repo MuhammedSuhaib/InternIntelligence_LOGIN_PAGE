@@ -5,8 +5,10 @@ import { auth } from "@/lib/firebase";
 import { signOut } from "firebase/auth";
 import Cookies from "universal-cookie";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 
 const cookies = new Cookies(); 
+const router = useRouter();
 
 export default function UserMenu() {
   const [user, setUser] = useState(auth.currentUser);
@@ -14,7 +16,7 @@ export default function UserMenu() {
 useEffect(() => {
   const unsubscribe = auth.onAuthStateChanged((u) => {
     if (!u) {
-      window.location.href = "/"; // redirect if not logged in
+      router.push("/")
     } else {
       setUser(u);
     }
