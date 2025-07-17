@@ -1,6 +1,7 @@
 "use client";
 import Image from "next/image";
 import Link from "next/link";
+import { FirebaseError } from "firebase/app";
 import { useState } from "react";
 import { auth, provider } from "@/lib/firebase";
 import {
@@ -21,34 +22,40 @@ export default function SignUp() {
   const cookies = new Cookies();
 
   // Signup with Manually
-  const register = async () => {
-    try {
-      const userCredential = await createUserWithEmailAndPassword(
-        auth,
-        registerEmail,
-        registerPassword
-      );
-      await updateProfile(userCredential.user, {
-        displayName: `${firstName} ${lastName}`,
-      });
-      cookies.set("auth-token", userCredential.user.refreshToken); // ✅ Add this
-      router.push("/account");
-    } catch (error: any) {
+  // filepath: c:\Users\giaic\Desktop\Internship\my-app\src\app\sign_up\page.tsx
+const register = async () => {
+  try {
+    const userCredential = await createUserWithEmailAndPassword(
+      auth,
+      registerEmail,
+      registerPassword
+    );
+    await updateProfile(userCredential.user, {
+      displayName: `${firstName} ${lastName}`,
+    });
+    cookies.set("auth-token", userCredential.user.refreshToken);
+    router.push("/");
+  } catch (error) {
+    if (error instanceof FirebaseError) {
       if (error.code === "auth/email-already-in-use") {
         alert(
           "Email is already in use. Try logging in or use a different email."
         );
+      } else if (error.message) {
+        alert(error.message);
+      } else {
+        alert("An unknown error occurred.");
       }
-      else{alert(error.message)}
-     
+    } else {
+      alert("An unknown error occurred.");
     }
-  };
-
+  }
+};
   // Signup with Google
   const signInWithGoogle = async () => {
     const result = await signInWithPopup(auth, provider);
     cookies.set("auth-token", result.user.refreshToken);
-    router.push("/account");
+    router.push("/");
   };
 
   return (
@@ -131,7 +138,7 @@ export default function SignUp() {
           {/*---------------------------------------------- Form---------------------------------------------- */}
           <span className="flex justify-center-safe items-center-safe">
             Already have an account?
-            <Link href="/" className="text-blue-600 hover:underline text-sm">
+            <Link href="/login" className="text-blue-600 hover:underline text-sm">
               Login
             </Link>
           </span>
