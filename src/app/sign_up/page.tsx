@@ -21,8 +21,8 @@ export default function SignUp() {
   const router = useRouter();
   const cookies = new Cookies();
 
-  // Signup with Manually
-  // filepath: c:\Users\giaic\Desktop\Internship\my-app\src\app\sign_up\page.tsx
+  // ------------------------------------------------Signup  Manually------------------------------------------------
+  
   const register = async () => {
     try {
       const userCredential = await createUserWithEmailAndPassword(
@@ -51,16 +51,28 @@ export default function SignUp() {
       }
     }
   };
-  // Signup with Google
+
+  // ------------------------------------------------Login with Google ------------------------------------------------
+
   const signInWithGoogle = async () => {
-    const result = await signInWithPopup(auth, provider);
-    cookies.set("auth-token", result.user.refreshToken);
-    router.push("/");
+    try {
+      const result = await signInWithPopup(auth, provider);
+      cookies.set("auth-token", result.user.refreshToken);
+      router.push("/");
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        console.error("Error signing out:", error.message);
+      } else {
+        console.error("Unknown error signing out");
+      }
+    }
   };
 
   return (
     <div className="min-h-screen flex bg-gray-50">
-      {/* Sign Up Form */}
+
+      {/* ------------------------------------------------Sign Up Form------------------------------------------------ */}
+
       <div className="flex-2 flex items-center justify-center">
         <div className="w-full max-w-sm space-y-6">
           <div className="flex justify-center mb-4">
@@ -87,7 +99,9 @@ export default function SignUp() {
             <span className="mx-2 text-sm text-gray-400">OR</span>
             <hr className="flex-grow border-gray-300" />
           </div>
-          {/*---------------------------------------------- Form---------------------------------------------- */}
+
+          {/*---------------------------------------------- Form start---------------------------------------------- */}
+
           <form
             onSubmit={(e) => {
               e.preventDefault();
@@ -139,7 +153,7 @@ export default function SignUp() {
               Join
             </button>
           </form>
-          {/*---------------------------------------------- Form---------------------------------------------- */}
+          {/*---------------------------------------------- Form end---------------------------------------------- */}
           <span className="flex justify-center-safe items-center-safe">
             Already have an account?
             <Link
@@ -151,8 +165,9 @@ export default function SignUp() {
           </span>
         </div>
       </div>
-      {/* Background Image Section */}
-      <div className="flex-1 bg-[url('/bird.webp')] bg-cover bg-center flex items-center justify-center"></div>
+
+      {/* ------------------------------------------------Background Image Section------------------------------------ */}
+      <aside className="flex-1 bg-[url('/bird.webp')] bg-cover bg-center flex items-center justify-center"></aside>
     </div>
   );
 }

@@ -48,12 +48,11 @@ export default function UserMenu() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4">
+    <div className="min-h-screen flex flex-col items-center justify-center bg-gray-50 px-4 gap-20">
+      <h1 className="text-center text-xl font-semibold text-gray-900">
+        𝕎𝕖𝕝𝕔𝕠𝕞𝕖 𝕋𝕠 𝕀𝕟𝕥𝕖𝕣𝕟 𝕀𝕟𝕥𝕖𝕝𝕝𝕚𝕘𝕖𝕟𝕔𝕖
+      </h1>
       <div className="bg-white shadow-xl rounded-2xl p-8 w-full max-w-md text-center">
-        <h1 className="text-center text-xl font-semibold text-gray-900">
-          𝕎𝕖𝕝𝕔𝕠𝕞𝕖 𝕋𝕠 𝕀𝕟𝕥𝕖𝕣𝕟 𝕀𝕟𝕥𝕖𝕝𝕝𝕚𝕘𝕖𝕟𝕔𝕖
-        </h1>
-
         <div className="flex justify-center mb-4">
           <Image
             src={user.photoURL || "/user.jpg"}

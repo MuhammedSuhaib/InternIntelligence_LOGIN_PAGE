@@ -22,7 +22,8 @@ export default function Login() {
   const router = useRouter();
   const cookies = new Cookies();
 
-  // Login with user name and pass
+  // ------------------------------------------------Login Manually------------------------------------------------
+
   const login = async () => {
     const persistence = rememberMe
       ? browserLocalPersistence
@@ -44,22 +45,26 @@ export default function Login() {
       }
     }
   };
-  // Login with Google
+
+
+  // ------------------------------------------------Login with Google ------------------------------------------------
+  
   const signInWithGoogle = async () => {
-    // try {
+    try {
       const result = await signInWithPopup(auth, provider);
       cookies.set("auth-token", result.user.refreshToken);
       router.push("/");
-    // } catch (error: unknown) {
-    //   if (error instanceof Error) {
-    //     console.error("Error signing out:", error.message);
-    //   } else {
-    //     console.error("Unknown error signing out");
-    //   }
-    // }
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        console.error("Error signing out:", error.message);
+      } else {
+        console.error("Unknown error signing out");
+      }
+    }
   };
 
-  // Pass Reset
+  // ------------------------------------------------Password Reset------------------------------------------------
+
  const resetPassword = async () => {
   if (!loginEmail) {
     alert("Please enter your email first.");
@@ -112,7 +117,9 @@ export default function Login() {
             <span className="mx-2 text-sm text-gray-400">OR</span>
             <hr className="flex-grow border-gray-300" />
           </div>
-          {/*---------------------------------------------- Form---------------------------------------------- */}
+
+          {/*---------------------------------------------- Form start---------------------------------------------- */}
+
           <form
             onSubmit={(e) => {
               e.preventDefault();
@@ -176,7 +183,9 @@ export default function Login() {
               Login
             </button>
           </form>
-          {/*---------------------------------------------- Form---------------------------------------------- */}
+
+          {/*---------------------------------------------- Form end---------------------------------------------- */}
+
           <span className="flex justify-center-safe items-center-safe">
             Don&apos;t have an account?
             <Link
@@ -188,7 +197,9 @@ export default function Login() {
           </span>
         </div>
       </main>
-      {/* Background Image Section */}
+
+      {/* ------------------------------------------------Background Image Section------------------------------------ */}
+      
       <aside className="flex-1 bg-[url('/bird.webp')] bg-cover bg-center flex items-center justify-center"></aside>
     </div>
   );
