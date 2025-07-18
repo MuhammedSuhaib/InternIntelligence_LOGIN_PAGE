@@ -22,7 +22,7 @@ export default function SignUp() {
   const cookies = new Cookies();
 
   // ------------------------------------------------Signup  Manually------------------------------------------------
-  
+
   const register = async () => {
     try {
       const userCredential = await createUserWithEmailAndPassword(
@@ -70,10 +70,8 @@ export default function SignUp() {
 
   return (
     <div className="min-h-screen flex bg-gray-50">
-
       {/* ------------------------------------------------Sign Up Form------------------------------------------------ */}
-
-      <div className="flex-2 flex items-center justify-center">
+      <main className="flex-2 flex items-center justify-center px-4 md:px-0">
         <div className="w-full max-w-sm space-y-6">
           <div className="flex justify-center mb-4">
             <Image src="/images.png" alt="Logo" width={150} height={40} />
@@ -164,10 +162,9 @@ export default function SignUp() {
             </Link>
           </span>
         </div>
-      </div>
-
+      </main>
       {/* ------------------------------------------------Background Image Section------------------------------------ */}
-      <aside className="flex-1 bg-[url('/bird.webp')] bg-cover bg-center flex items-center justify-center"></aside>
+      <aside className="hidden md:flex flex-1 bg-[url('/right.png')] bg-cover bg-center items-center justify-center"></aside>{" "}
     </div>
   );
 }
