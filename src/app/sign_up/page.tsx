@@ -23,34 +23,34 @@ export default function SignUp() {
 
   // Signup with Manually
   // filepath: c:\Users\giaic\Desktop\Internship\my-app\src\app\sign_up\page.tsx
-const register = async () => {
-  try {
-    const userCredential = await createUserWithEmailAndPassword(
-      auth,
-      registerEmail,
-      registerPassword
-    );
-    await updateProfile(userCredential.user, {
-      displayName: `${firstName} ${lastName}`,
-    });
-    cookies.set("auth-token", userCredential.user.refreshToken);
-    router.push("/");
-  } catch (error) {
-    if (error instanceof FirebaseError) {
-      if (error.code === "auth/email-already-in-use") {
-        alert(
-          "Email is already in use. Try logging in or use a different email."
-        );
-      } else if (error.message) {
-        alert(error.message);
+  const register = async () => {
+    try {
+      const userCredential = await createUserWithEmailAndPassword(
+        auth,
+        registerEmail,
+        registerPassword
+      );
+      await updateProfile(userCredential.user, {
+        displayName: `${firstName} ${lastName}`,
+      });
+      cookies.set("auth-token", userCredential.user.refreshToken);
+      router.push("/");
+    } catch (error) {
+      if (error instanceof FirebaseError) {
+        if (error.code === "auth/email-already-in-use") {
+          alert(
+            "Email is already in use. Try logging in or use a different email."
+          );
+        } else if (error.message) {
+          alert(error.message);
+        } else {
+          alert("An unknown error occurred.");
+        }
       } else {
         alert("An unknown error occurred.");
       }
-    } else {
-      alert("An unknown error occurred.");
     }
-  }
-};
+  };
   // Signup with Google
   const signInWithGoogle = async () => {
     const result = await signInWithPopup(auth, provider);
@@ -66,6 +66,10 @@ const register = async () => {
           <div className="flex justify-center mb-4">
             <Image src="/images.png" alt="Logo" width={150} height={40} />
           </div>
+          <h1 className="text-center text-xl font-semibold text-gray-900">
+            𝕀𝕟𝕥𝕖𝕣𝕟 𝕀𝕟𝕥𝕖𝕝𝕝𝕚𝕘𝕖𝕟𝕔𝕖 𝕊𝕚𝕘𝕟 𝕦𝕡 ℙ𝔸𝔾𝔼
+          </h1>
+
           <h2 className="text-center text-xl font-semibold text-gray-900">
             Sign up
           </h2>
@@ -138,7 +142,10 @@ const register = async () => {
           {/*---------------------------------------------- Form---------------------------------------------- */}
           <span className="flex justify-center-safe items-center-safe">
             Already have an account?
-            <Link href="/login" className="text-blue-600 hover:underline text-sm">
+            <Link
+              href="/login"
+              className="text-blue-600 hover:underline text-sm"
+            >
               Login
             </Link>
           </span>

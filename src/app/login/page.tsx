@@ -46,17 +46,17 @@ export default function Login() {
   };
   // Login with Google
   const signInWithGoogle = async () => {
-    try {
+    // try {
       const result = await signInWithPopup(auth, provider);
       cookies.set("auth-token", result.user.refreshToken);
       router.push("/");
-    } catch (error: unknown) {
-      if (error instanceof Error) {
-        console.error("Error signing out:", error.message);
-      } else {
-        console.error("Unknown error signing out");
-      }
-    }
+    // } catch (error: unknown) {
+    //   if (error instanceof Error) {
+    //     console.error("Error signing out:", error.message);
+    //   } else {
+    //     console.error("Unknown error signing out");
+    //   }
+    // }
   };
 
   // Pass Reset
@@ -91,6 +91,10 @@ export default function Login() {
           <div className="flex justify-center mb-4">
             <Image src="/images.png" alt="Logo" width={150} height={40} />
           </div>
+              <h1 className="text-center text-xl font-semibold text-gray-900">
+            𝕀𝕟𝕥𝕖𝕣𝕟 𝕀𝕟𝕥𝕖𝕝𝕝𝕚𝕘𝕖𝕟𝕔𝕖 𝕃𝕠𝕘𝕚𝕟 ℙ𝔸𝔾𝔼
+          </h1>
+
           <h2 className="text-center text-xl font-semibold text-gray-900">
             Login
           </h2>
